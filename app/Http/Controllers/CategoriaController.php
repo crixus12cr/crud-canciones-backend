@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
@@ -13,7 +15,7 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Categoria::get());
     }
 
     /**
@@ -24,7 +26,26 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+            $tipo = Categoria::create([
+                'nombre' => $request['nombre'],
+                'estado' => true,
+                'tipo_id' => $request['tipo_id']
+            ]);
+
+            return response()->json([
+                'status'=>'OK',
+                'data'=> $tipo,
+                'message'=> 'Categoria creada correctamente'
+            ]);
+
+        } catch (QueryException $e) {
+            return response()->json([
+                'status' => 'ERROR',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -35,7 +56,23 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+
+            $consulta= Categoria::find($id);
+            if(!$consulta){
+                return response()->json([
+                    'status'=>'ERROR',
+                    'message'=>'La categoria no fue encontrada'
+                ]);
+            }
+            return response()->json($consulta);
+
+        } catch (QueryException $e) {
+            return response()->json([
+                'status' => 'ERROR',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -47,7 +84,35 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $consulta = Categoria::where([
+                ['id', $id]
+            ])
+            ->first();
+            if(!$consulta){
+                return response()->json([
+                    'status'=> 'ERROR',
+                    'message'=> 'No se puede encontrar la categoria'
+                ]);
+            }
+            $consulta->update([
+
+                'nombre' => $request['nombre'],
+                'estado' => $request['estado'],
+                'tipo_id' => $request['tipo_id']
+
+            ]);
+            return response()->json([
+                'status' => 'OK',
+                'message'=> 'Se edito la categoria correctamente',
+                'registro'=> $consulta
+            ]);
+        }catch(QueryException $e){
+            return response()->json([
+                'status' => 'ERROR',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -58,6 +123,28 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $consulta = Categoria::where('id',$id)->first();
+            if(!$consulta){
+                return response()->json([
+                    'status'=>'ERROR',
+                    'message'=>'No se encontro el registro'
+                ]);
+            }
+            $consulta->update([
+                'estado' => false,
+            ]);
+            $consulta->delete();
+            return response()->json([
+                'status' => 'OK',
+                'message'=>'Se ha eliminado la categoria correctamente',
+                'registro'=>$consulta
+            ]);
+        }catch(QueryException $e){
+            return response()->json([
+                'status' => 'ERROR',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

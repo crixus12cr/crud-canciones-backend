@@ -24,4 +24,9 @@ class Categoria extends Model
     {
         return $this->belongsTo(Tipo::class);
     }
+
+    public function canciones()
+    {
+        return $this->hasMany(Cancion::class,'categoria_id');
+    }
 }

@@ -19,4 +19,9 @@ class Cancion extends Model
         'estado',
         'categoria_id'
     ];
+
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class);
+    }
 }
