@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Cancion;
-use App\Models\Categoria;
-use App\Models\Tipo;
+use App\Http\Controllers\CancionController;
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\TipoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
 ], function ($router) {
-    Route::resource('tipo_cancion', Tipo::class);
-    Route::resource('categorias', Categoria::class);
-    Route::resource('canciones', Cancion::class);
+    Route::resource('tipo_cancion', TipoController::class);
+    Route::resource('categorias', CategoriaController::class);
+    Route::resource('canciones', CancionController::class);
 });

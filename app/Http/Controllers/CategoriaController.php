@@ -15,7 +15,7 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        return response()->json(Categoria::get());
+        return response()->json(Categoria::with('tipo')->get());
     }
 
     /**

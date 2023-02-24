@@ -15,7 +15,7 @@ class CancionController extends Controller
      */
     public function index()
     {
-        return response()->json(Cancion::get());
+        return response()->json(Cancion::with('categoria')->get());
     }
 
     /**
